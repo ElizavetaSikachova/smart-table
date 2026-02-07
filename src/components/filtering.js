@@ -14,7 +14,7 @@ export function initFiltering(elements, indexes) {
                     option.textContent = name;
                     return option;
                 })
-        )
+        );
     });
 
     return (data, state, action) => {
@@ -28,6 +28,9 @@ export function initFiltering(elements, indexes) {
                 state[field] = '';
             }
         }
+        
+        if (state.totalFrom) state.totalFrom = parseFloat(state.totalFrom);
+        if (state.totalTo) state.totalTo = parseFloat(state.totalTo);
 
         // @todo: #4.5 — отфильтровать данные используя компаратор
         return data.filter(row => compare(row, state));
