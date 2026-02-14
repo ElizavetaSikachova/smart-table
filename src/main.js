@@ -11,6 +11,7 @@ import {initTable} from "./components/table.js";
 import {initPagination} from "./components/pagination.js";
 import {initSorting} from "./components/sorting.js";
 import {initFiltering} from "./components/filtering.js";
+import {initSearching} from "./components/searching.js";
 
 
 // Исходные данные используемые в render()
@@ -21,9 +22,16 @@ const {data, ...indexes} = initData(sourceData);
  * @returns {Object}
  */
 function collectState() {
-    const state = processFormData(new FormData(sampleTable.container));
-    const rowsPerPage = parseInt(state.rowsPerPage);
-    const page = parseInt(state.page ?? 1);
+    const { rowsPerPage, page, totalFrom, totalTo, ...state } = processFormData(new FormData(sampleTable.container));
+    const rowsPerPageInt = parseInt(rowsPerPage);
+    const pageInt = parseInt(page ?? 1);
+    const total = [null,  null];
+    const totalFromNum = Number(totalFrom);
+    if (totalFrom !== '' && !isNaN(totalFromNum))
+        total[0] = totalFromNum;
+    const totalToNum = Number(totalTo);
+    if (totalTo !== '' && !isNaN(totalTo))
+        total[1] = totalToNum;
 
     return {
         ...state,
@@ -43,6 +51,7 @@ function render(action) {
     result = applyPagination(result, state, action);
     result = applyFiltering(result, state, action);
     result = applySorting(result, state, action);
+    result = applySearching(result, state, action);
 
 
     sampleTable.render(result)
@@ -73,12 +82,16 @@ const applySorting = initSorting([
     sampleTable.header.elements.sortByTotal
 ]);
 
-const applyFiltering = initFiltering(sampleTable.filter.elements, {
-    searchBySeller: indexes.sellers
+const applyFiltering = initFiltering(
+    sampleTable.filter.elements, {    
+        searchBySeller: indexes.sellers
 });
+
+const applySearching = initSearching('search');
 
 
 const appRoot = document.querySelector('#app');
 appRoot.appendChild(sampleTable.container);
+
 
 render();
