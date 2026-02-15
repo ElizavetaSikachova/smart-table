@@ -10,7 +10,6 @@ export function initSorting(columns) {
             action.dataset.value = sortMap[action.dataset.value];
             field = action.dataset.field;
             order = action.dataset.value;
-
             // @todo: #3.2 — сбросить сортировки остальных колонок
             columns.forEach(column => {
                 if (column.dataset.field !== action.dataset.field) {
@@ -19,10 +18,10 @@ export function initSorting(columns) {
             });
         } else {
             // @todo: #3.3 — получить выбранный режим сортировки
-            columns.forEach(column => {
-                if (column.dataset.value !== 'none') {
-                    field = column.dataset.field;
-                    order = column.dataset.value;
+            columns.forEach(column => {                        
+                if (column.dataset.value !== 'none') {         
+                    field = column.dataset.field;              
+                    order = column.dataset.value;              
                 }
             });
         }
